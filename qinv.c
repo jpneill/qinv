@@ -10,7 +10,7 @@ extern void dgetri_(int* N, double* A, int* lda, int* IPIV, double* WORK, int* l
 K inv(K mlst,K dim){
         K res = ktn(KF,0);
         int len=(int)(mlst->n);
-        //A is in column order format due to lapack being written in fortran
+        //A is in column major format due to lapack being written in fortran
         F* A=kF(mlst);
         int i,j,n=dim->i,info;
         int ipiv[len];
@@ -19,10 +19,11 @@ K inv(K mlst,K dim){
         double work[lwork];
         // LU decomposition of A (stored in same memory as A)
         dgetrf_ (&n,&n,A,&n,ipiv,&info);
+        if(info>0)return ki(0); // If info is greater than 0 then matrix is singular
         // Calculate inverse of A using LU decomp (also stored in same memory as A)
         dgetri_ (&n,A,&n,ipiv,work,&lwork,&info);
         // Assign inverse to res as k 'float' objects.
-        // Res is in row order format instead of column
+        // Res is in row major format instead of column
         // This makes it easier to convert back to a matrix in q
         // e.q. A after inversion = 1 3 2 4 (1 3 are column 1; 2 4 are column 2)
         //      res returned to q = 1 2 3 4 (1 2 are row 1;3 4 are row 2)
