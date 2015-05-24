@@ -30,6 +30,6 @@ K inv(K mlst,K dim){
         //      Convert to matrix in q = 2 2#1 2 3 4
         for(i=0;i<n;i++)
                 for(j=0;j<n;j++)
-                        res=ja(&res,&A[2*j+i]);
+                        res=ja(&res,&A[n*j+i]);
         return res;
 }
